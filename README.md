@@ -38,7 +38,7 @@ butGa.pageview({
   location: 'http://foo.com/home?a=b',
 
   // 可选
-  // https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#dh
+  // https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#dh
   host: 'foo.com',
 
   // 可选
