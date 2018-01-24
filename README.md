@@ -4,7 +4,7 @@
 
 1. 使用localstorage读写clientId，clientId使用UUID (version 4)随机生成
 
-2. 无法使用官方ga时，可考虑使用这个库来满足功能
+2. 无法使用官方ga时，可考虑使用这个库来满足功能
 
 ## 使用方式
 
