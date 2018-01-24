@@ -29,7 +29,7 @@ export default class ButGa {
   event(info) {
     const me = this;
 
-    me.send(
+    return me.send(
       'event',
       {
         ec: info.category,
@@ -44,7 +44,7 @@ export default class ButGa {
   pageview(info={}) {
     const me = this;
 
-    me.send(
+    return me.send(
       'pageview',
       {
         dl: info.location || global.location.href,
@@ -70,12 +70,15 @@ export default class ButGa {
 
     const xhr = new XMLHttpRequest();
 
+    const url = 'https://www.google-analytics.com/collect?' + paramStr;
     xhr.open(
       'GET',
-      'https://www.google-analytics.com/collect?' + paramStr,
+      url,
       true
     );
 
-    xhr.send(null); 
+    xhr.send(null);
+
+    return url;
   }
 }
