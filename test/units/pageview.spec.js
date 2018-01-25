@@ -30,13 +30,22 @@ describe('pageview', () => {
   });
 
   it('default', () => {
+    const originTitle = document.title;
+
+    const title = global.document.title = 'pageview-default';
+
     const ga = createGa();
 
     const url = ga.pageview();
 
     const { query } = parse(url, true);
 
-    expect(query.dl)
-      .toBe(global.location.href);
+    expect(query.dt)
+      .toBe(title);
+
+    // reset
+    global.document.title = originTitle;
   });
+
+  
 });

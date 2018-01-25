@@ -33,7 +33,7 @@ const butGa = new ButGa({
 
 ```
 butGa.pageview({
-  // 可选，默认为location.href
+  // 可选，默认为location.href去掉location.hash后的部分
   // https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#dl
   location: 'http://foo.com/home?a=b',
 
@@ -45,7 +45,7 @@ butGa.pageview({
   // https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#dp
   page: '/foo',
 
-  // 可选
+  // 可选，默认为document.title
   // https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#dt
   title: 'my-title'
 });

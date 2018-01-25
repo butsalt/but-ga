@@ -54,4 +54,13 @@ describe('info', () => {
     expect(query.ul)
       .toBeDefined();
   });
+
+  it('extra', () => {
+    const { query } = createLocation();
+
+    expect(query.dl)
+      .toBe(
+        global.location.href.split('#')[0]
+      );
+  })
 });

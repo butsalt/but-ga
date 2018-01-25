@@ -7,15 +7,14 @@ import assembleParams from '@/utils/assembleParams';
 export default class ButGa {
   static version = VERSION
 
-  systemInfo = getSystemInfo();
-
   constructor(info) {
     const me = this;
 
+    // base
     const baseInfo = me.baseInfo = {
       v: 1,
       tid: info.trackingId,
-      uid: info.userId
+      uid: info.userId,
     };
 
     let clientId = storage.get('ga:clientId');
@@ -24,6 +23,14 @@ export default class ButGa {
       storage.set('ga:clientId', clientId);
     }
     baseInfo.cid = clientId;
+
+    // system
+    me.systemInfo = getSystemInfo();
+
+    // extra
+    me.extraInfo = {
+      dl: (global.location.href.split('#'))[0]
+    };
   }
 
   event(info) {
@@ -47,30 +54,36 @@ export default class ButGa {
     return me.send(
       'pageview',
       {
-        dl: info.location || global.location.href,
+        dl: info.location,
         dh: info.host,
         dp: info.page,
-        dt: info.title
+        dt: info.title || global.document.title
       }
     );
   }
 
-  send(type, paramMap) {
+  send(type, sendInfo) {
     const me = this;
 
-    const paramStr = assembleParams(
-      {
-        _t: genNonce(),
-        t: type,
-        ...me.baseInfo,
-        ...me.systemInfo,
-        ...paramMap
+    const info = {
+      _t: genNonce(),
+      t: type,
+      ...me.baseInfo,
+      ...me.systemInfo,
+      ...sendInfo
+    };
+
+    const extraInfo = me.extraInfo;
+    for (let key in extraInfo) {
+      if (info[key] == null) {
+        info[key] = extraInfo[key];
       }
-    );
+    }
 
     const xhr = new XMLHttpRequest();
 
-    const url = 'https://www.google-analytics.com/collect?' + paramStr;
+    const url = 'https://www.google-analytics.com/collect?' + assembleParams(info);
+
     xhr.open(
       'GET',
       url,
