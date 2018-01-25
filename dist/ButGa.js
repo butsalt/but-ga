@@ -324,10 +324,9 @@ var ButGa = function () {
   function ButGa(info) {
     __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_classCallCheck___default()(this, ButGa);
 
-    this.systemInfo = Object(__WEBPACK_IMPORTED_MODULE_3__utils_getSystemInfo__["a" /* default */])();
-
     var me = this;
 
+    // base
     var baseInfo = me.baseInfo = {
       v: 1,
       tid: info.trackingId,
@@ -340,6 +339,14 @@ var ButGa = function () {
       __WEBPACK_IMPORTED_MODULE_6__utils_storage__["a" /* default */].set('ga:clientId', clientId);
     }
     baseInfo.cid = clientId;
+
+    // system
+    me.systemInfo = Object(__WEBPACK_IMPORTED_MODULE_3__utils_getSystemInfo__["a" /* default */])();
+
+    // extra
+    me.extraInfo = {
+      dl: global.location.href.split('#')[0]
+    };
   }
 
   __WEBPACK_IMPORTED_MODULE_2_babel_runtime_helpers_createClass___default()(ButGa, [{
@@ -363,25 +370,33 @@ var ButGa = function () {
       var me = this;
 
       return me.send('pageview', {
-        dl: info.location || global.location.href,
+        dl: info.location,
         dh: info.host,
         dp: info.page,
-        dt: info.title
+        dt: info.title || global.document.title
       });
     }
   }, {
     key: 'send',
-    value: function send(type, paramMap) {
+    value: function send(type, sendInfo) {
       var me = this;
 
-      var paramStr = Object(__WEBPACK_IMPORTED_MODULE_7__utils_assembleParams__["a" /* default */])(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends___default()({
+      var info = __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends___default()({
         _t: Object(__WEBPACK_IMPORTED_MODULE_5__utils_genNonce__["a" /* default */])(),
         t: type
-      }, me.baseInfo, me.systemInfo, paramMap));
+      }, me.baseInfo, me.systemInfo, sendInfo);
+
+      var extraInfo = me.extraInfo;
+      for (var key in extraInfo) {
+        if (info[key] == null) {
+          info[key] = extraInfo[key];
+        }
+      }
 
       var xhr = new XMLHttpRequest();
 
-      var url = 'https://www.google-analytics.com/collect?' + paramStr;
+      var url = 'https://www.google-analytics.com/collect?' + Object(__WEBPACK_IMPORTED_MODULE_7__utils_assembleParams__["a" /* default */])(info);
+
       xhr.open('GET', url, true);
 
       xhr.send(null);
@@ -393,7 +408,7 @@ var ButGa = function () {
   return ButGa;
 }();
 
-ButGa.version = "1.0.0";
+ButGa.version = "1.0.1";
 /* harmony default export */ __webpack_exports__["default"] = (ButGa);
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1)))
 
